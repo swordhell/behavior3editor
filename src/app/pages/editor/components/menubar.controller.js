@@ -23,9 +23,11 @@
     var vm = this;
     vm.onNewTree           = onNewTree;
     vm.onCloseProject      = onCloseProject;
+    vm.onBackToProject     = onBackToProject;
     vm.onSaveProject       = onSaveProject;
     vm.onExportProjectJson = onExportProjectJson;
     vm.onExportTreeJson    = onExportTreeJson;
+    vm.onExportTreesJson   = onExportTreesJson;
     vm.onExportNodesJson   = onExportNodesJson;
     vm.onImportProjectJson = onImportProjectJson;
     vm.onImportTreeJson    = onImportTreeJson;
@@ -117,6 +119,10 @@
       $state.go('editor.export', {type:'tree', format:'json'});
       return false;
     }
+    function onExportTreesJson() {
+      $state.go('editor.export', {type:'trees', format:'json'});
+      return false;
+    }
     function onExportNodesJson() {
       $state.go('editor.export', {type:'nodes', format:'json'});
       return false;
@@ -152,6 +158,10 @@
       }
 
       return false;
+    }
+    function onBackToProject() {
+      onSaveProject();
+      $state.go('dash.projects');
     }
     function onSaveProject() {
       projectModel

@@ -2,8 +2,8 @@
   <div class="menubar-left">
     <div class="side">
       <ul>
-        <li><a class="logo" title="behavior3.com" href="http://behavior3.com" target="_blank">Behavior3</a></li>
-        <li><a class="fastlink" title="All projects" ui-sref="dash.projects"><i class="fa fa-fw fa-arrow-circle-o-left"></i></a></li>
+        <li><a class="fastlink" title="Batch Export All Trees" ng-click="menubar.onExportTreesJson()">ExportTrees</a></li>
+        <li><a class="fastlink" title="All projects" ng-click="menubar.onBackToProject()"><i class="fa fa-fw fa-arrow-circle-o-left"></i></a></li>
         <li><a class="fastlink" title="Settings" ui-sref="dash.settings"><i class="fa fa-fw fa-cog"></i></a></li>
         <li><a class="fastlink" title="Save project" ng-click="menubar.onSaveProject()"><i class="fa fa-fw fa-save"></i></a></li>
         <li><a class="fastlink" title="Undo" ng-click="menubar.onUndo()"><i class="fa fa-fw fa-undo"></i></a></li>
@@ -14,7 +14,7 @@
     <ul class="">
       <li><a>Project</a>
         <ul>
-          <li><a ui-sref="dash.projects">
+          <li><a ng-click="menubar.onBackToProject()">
             All projects
             <span class="shortcut"></span>
           </a></li>
@@ -33,6 +33,7 @@
             <ul>
               <li><a ng-click="menubar.onExportProjectJson()">Project as JSON</a></li>
               <li><a ng-click="menubar.onExportTreeJson()">Tree as JSON</a></li>
+			  <li><a ng-click="menubar.onExportTreesJson()">Batch export trees as JSON</a></li>
               <li><a ng-click="menubar.onExportNodesJson()">Nodes as JSON</a></li>
             </ul>
           </li>

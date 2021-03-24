@@ -6,6 +6,7 @@ b3e.editor.ImportManager = function(editor) {
     if (!project) return;
 
     if (data.custom_nodes) this.nodesAsData(data.custom_nodes);
+    if (data.custom_folders) this.foldersAsData(data.custom_folders);
     if (data.trees) this.treesAsData(data.trees);
     if (data.selectedTree) {
       project.trees.select(data.selectedTree);
@@ -13,11 +14,21 @@ b3e.editor.ImportManager = function(editor) {
     editor.trigger('projectimported');
   };
 
-  this.treeAsData = function(data) {
+  this.addTreeAsData = function(data) {
     var project = editor.project.get();
     if (!project) return;
 
     var tree = project.trees.add(data.id);
+  };
+
+  this.treeAsData = function(data) {
+    var project = editor.project.get();
+    if (!project) return;
+
+    var tree = project.trees.get(data.id);
+    if (!tree) {
+      tree = project.trees.add(data.id);
+    }
     var root = tree.blocks.getRoot();
     var first = null;
 
@@ -29,15 +40,20 @@ b3e.editor.ImportManager = function(editor) {
     tree.scaleY      = display.camera_z || 1;
     var treeNode = project.nodes.get(tree._id);
     treeNode.title = data.title;
+    treeNode.description = data.description;
+    treeNode.parent = data.parent;
 
     root.title       = data.title;
     root.description = data.description;
     root.properties  = data.properties;
+    root._parent     = data.parent;
     root.x           = display.x || 0;
     root.y           = display.y || 0;
 
     // Custom nodes
     if (data.custom_nodes) this.nodesAsData(data.custom_nodes);
+    // Custom folders
+    if (data.custom_folders) this.foldersAsData(data.custom_folders);
 
     var id, spec;
 
@@ -98,8 +114,13 @@ b3e.editor.ImportManager = function(editor) {
   };
 
   this.treesAsData = function(data) {
+    // first addTrees prevent tree nest
     for (var i=0; i<data.length; i++) {
-      this.treeAsData(data[i]);
+      this.addTreeAsData(data[i]);
+    }
+    // second addNodes
+    for (var j=0; j<data.length; j++) {
+      this.treeAsData(data[j]);
     }
   };
 
@@ -112,6 +133,17 @@ b3e.editor.ImportManager = function(editor) {
       project.nodes.add(template);
     }
     editor.trigger('nodeimported');
+  };
+
+  this.foldersAsData = function(data) {
+    var project = editor.project.get();
+    if (!project) return;
+
+    for (var i=0; i<data.length; i++) {
+      var template = data[i];
+      project.folders.add(template);
+    }
+    editor.trigger('folderimported');
   };
   this._applySettings = function(settings) {};
 };

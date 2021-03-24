@@ -27,6 +27,7 @@
     vm.format      = null;
     vm.compact     = '';
     vm.pretty      = '';
+    vm.subPath     = '';
     vm.result      = null;
     vm.data        = null;
     vm.hideCompact = false;
@@ -49,9 +50,29 @@
       else if (vm.type === 'tree' && vm.format === 'json') {
         _createJson(e.treeToData());
       }
+      else if (vm.type === 'trees' && vm.format === 'json') {
+		    _createJson(e.treesToData(null,false));
+      }
       else if (vm.type === 'nodes' && vm.format === 'json') {
         _createJson(e.nodesToData());
       }
+    }
+
+    function _fetchSubPath(parent,custom_folders) {
+      var retStr = "";
+      var node;
+      for (var i = 0; i < custom_folders.length; i++) {
+        if (custom_folders[i].name == parent) {
+          node = custom_folders[i];
+          break;
+        }
+      }
+      if (node.parent == undefined) {
+        retStr = "/" + node.title;
+      } else {
+        retStr = _fetchSubPath(node.parent,custom_folders) + "/" + node.title;
+      }
+      return retStr;
     }
 
     function _createJson(data) {
@@ -59,6 +80,16 @@
       vm.compact = JSON3.stringify(data);
       vm.pretty = JSON3.stringify(data, null, 2);
       vm.result = vm.pretty;
+      vm.subPath = "/";
+      // 在跟目录
+      if (data.parent == undefined) {
+        return;
+      }
+      if (data.custom_folders == undefined) {
+        console.log("无法读取custom_folders!");
+        return;
+      }
+      vm.subPath = _fetchSubPath(data.parent,data.custom_folders) + "/";
     }
 
     function select(){
@@ -70,18 +101,50 @@
     }
 
     function save() {
-      dialogService
-        .saveAs(null, ['.b3', '.json'])
-        .then(function(path) {
-          storageService
-            .saveAsync(path, vm.pretty)
-            .then(function() {
+
+      var defaultName = null;
+      var project = $window.editor.project.get();
+      if (!project) return;
+      if ( vm.type === 'tree') {
+        var tree = project.trees.getSelected();
+        var root = tree.blocks.getRoot();
+        defaultName = root.title;
+        dialogService
+            .saveAs(defaultName, ['.json'])
+            .then(function(path) {
+              storageService
+                .saveAsync(path, vm.pretty)
+                .then(function() {
+                  notificationService.success(
+                    'File saved',
+                    'The file has been saved successfully.'
+                  );
+                });
+            });
+      }else if (vm.type === 'trees') {
+        dialogService
+          .openDirectory()
+          .then(function(path){
+            tree = project.trees.each(function(tree) {
+              var root = tree.blocks.getRoot();
+              defaultName = root.title;
+              var fs = require('fs');
+              var e = $window.editor.export;
+              _createJson(e.treeToData(tree));
+              var subPath = path +vm.subPath;
+              fs.mkdir(subPath, { recursive: true }, function(err) {
+                if (err) throw err;
+              });
+              fs.writeFileSync(subPath+defaultName +'.json', vm.pretty);
               notificationService.success(
-                'File saved',
-                'The file has been saved successfully.'
+                'File path',
+                vm.subPath + defaultName +'.json'
               );
             });
-        });
+            
+          });
+        
+      }
     }
 
     function showCompact() {

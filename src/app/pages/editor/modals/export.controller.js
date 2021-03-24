@@ -81,16 +81,14 @@
       vm.pretty = JSON3.stringify(data, null, 2);
       vm.result = vm.pretty;
       vm.subPath = "/";
-      // 在跟目录
       if (data.parent == undefined) {
         return;
       }
       if (data.custom_folders == undefined) {
-        console.log("无法读取custom_folders!");
         return;
       }
       vm.subPath = _fetchSubPath(data.parent,data.custom_folders) + "/";
-    }
+     }
 
     function select(){
       var range = $document[0].createRange();
@@ -132,18 +130,15 @@
               var e = $window.editor.export;
               _createJson(e.treeToData(tree));
               var subPath = path +vm.subPath;
-              fs.mkdir(subPath, { recursive: true }, function(err) {
-                if (err) throw err;
-              });
+              fs.mkdir(subPath, { recursive: true }, function(err) {});
+              _createJson(e.treeToData(tree,true));
               fs.writeFileSync(subPath+defaultName +'.json', vm.pretty);
               notificationService.success(
-                'File path',
-                vm.subPath + defaultName +'.json'
+                'File saved',
+                defaultName +'.json'
               );
             });
-            
           });
-        
       }
     }
 

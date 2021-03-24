@@ -122,15 +122,17 @@
       }else if (vm.type === 'trees') {
         dialogService
           .openDirectory()
-          .then(function(path){
+          .then(function(p){
+            var path= require('path');
             tree = project.trees.each(function(tree) {
               var root = tree.blocks.getRoot();
               defaultName = root.title;
               var fs = require('fs');
               var e = $window.editor.export;
               _createJson(e.treeToData(tree));
-              var subPath = path +vm.subPath;
-              fs.mkdir(subPath, { recursive: true }, function(err) {});
+              var subPath = p +vm.subPath;
+              subPath=subPath.split(path.sep).join('/')
+              fs.mkdirSync(subPath, { recursive: true });
               _createJson(e.treeToData(tree,true));
               fs.writeFileSync(subPath+defaultName +'.json', vm.pretty);
               notificationService.success(

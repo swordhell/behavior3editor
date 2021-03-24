@@ -39,7 +39,7 @@ b3e.editor.ExportManager = function(editor) {
     };
 
     project.trees.each(function(tree) {
-      var d = this.treeToData(tree, false);
+      var d = this.treeToData(tree,true);
       d.id = tree._id;
       data.trees.push(d);
     }, this);

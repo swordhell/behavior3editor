@@ -1,9 +1,10 @@
 @icon-size : 35px;
+@add-ntf-size : 300px;
 
 .notification {
   position: fixed;
   bottom: 20px;
-  right: -@size-sidebar+-@icon-size;
+  right: -@size-sidebar+-@icon-size+-@add-ntf-size;
   z-index: @z-notification;
   opacity: 0;
   
@@ -29,6 +30,7 @@
     border-right: 0px;
     .notification-content {
       background-color: @color-light2;
+      width:1024px;
     }
   }
   &.error {
@@ -37,6 +39,7 @@
     border-right: 0px;
     .notification-content {
       background-color: @color-red-light;
+      width:1024px;
     }
   }
   &.success {
@@ -45,6 +48,7 @@
     border-right: 0px;
     .notification-content {
       background-color: @color-green-light;
+      width:1024px;
     }
   }
   &.warning {
@@ -53,6 +57,7 @@
     border-right: 0px;
     .notification-content {
       background-color: @color-yellow-light;
+      width:1024px;
     }
   }
   &.info {
@@ -61,6 +66,7 @@
     border-right: 0px;
     .notification-content {
       background-color: @color-blue-light;
+      width:1024px;
     }
   }
 

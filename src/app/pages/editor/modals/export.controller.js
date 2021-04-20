@@ -132,7 +132,11 @@
               _createJson(e.treeToData(tree));
               var subPath = p +vm.subPath;
               subPath=subPath.split(path.sep).join('/')
-              fs.mkdirSync(subPath, { recursive: true });
+              var stat = fs.statSync(subPath);
+              if (!stat.isDirectory())
+              {
+                fs.mkdirSync(subPath, { recursive: true });
+              }
               _createJson(e.treeToData(tree,true));
               fs.writeFileSync(subPath+defaultName +'.json', vm.pretty);
               notificationService.success(

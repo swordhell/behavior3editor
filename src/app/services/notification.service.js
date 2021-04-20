@@ -37,7 +37,7 @@ function notificationService($window, $timeout, $compile, $rootScope, $sce) {
     '  <div class="notification-icon" ng-show="icon"><i class="fa fa-fw" ng-class="icon"></i></div>'+
     '  <div class="notification-content" ng-class="{\'has-icon\': icon}">' +
     '    <div class="notification-title" ng-show="title" ng-bind-html="title"></div>'+
-    '    <div class="notification-message" ng-bind-html="message"></div>'+
+    '    <div class="notification-message" style=" width:480px; border:1px solid #000; height:100px;" ng-bind-html="message"></div>'+
     '  </div>' +
     '</div>';
 

@@ -46,7 +46,7 @@ function notificationService($window, $timeout, $compile, $rootScope, $sce) {
       title   : '',
       message : '',
       icon    : false,
-      delay   : 3000,
+      delay   : 20000,
     };
 
     // Default parameters

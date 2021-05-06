@@ -1,5 +1,5 @@
 @icon-size : 35px;
-@add-ntf-size : 300px;
+@add-ntf-size : 500px;
 
 .notification {
   position: fixed;
@@ -8,7 +8,7 @@
   z-index: @z-notification;
   opacity: 0;
   
-  width: @size-sidebar+@icon-size;
+  width: @size-sidebar+@icon-size+-@add-ntf-size;
   color: @color-dark1;
   transition: all 0.5s ease;
   
@@ -21,7 +21,7 @@
   }
   &.killed {
     opacity: 0;
-    right: -@size-sidebar+-@icon-size;
+    right: -@size-sidebar+-@icon-size+-@add-ntf-size;
   }
 
   &.default {

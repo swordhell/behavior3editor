@@ -132,18 +132,22 @@
               _createJson(e.treeToData(tree));
               var subPath = p +vm.subPath;
               subPath=subPath.split(path.sep).join('/')
-              var stat = fs.statSync(subPath);
-              if (!stat.isDirectory())
-              {
-                fs.mkdirSync(subPath, { recursive: true });
+              try {
+                var s = fs.statSync(subPath);
+              } catch (e) {
+                fs.mkdirSync(subPath, { recursive: true }, function(err) {
+                  if (err != null)
+                  {
+                    notificationService.warning('Warning',err.message);
+                  }
+                }
+                  );
               }
               _createJson(e.treeToData(tree,true));
               fs.writeFileSync(subPath+defaultName +'.json', vm.pretty);
-              notificationService.success(
-                'File saved',
-                defaultName +'.json'
-              );
+              
             });
+            notificationService.success('通知','操作结束');
           });
       }
     }
